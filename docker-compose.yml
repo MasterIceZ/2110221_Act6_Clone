@@ -7,7 +7,7 @@ services:
     volumes:
       - database-storage:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: 
+      POSTGRES_USER: act6
       POSTGRES_PASSWORD: 12345678
       POSTGRES_DB: db
     ports:
