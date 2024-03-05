@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import { swagger } from "@elysiajs/swagger";
 import { PrismaClient } from "@prisma/client";
+import { cors } from "@elysiajs/cors";
 
 import { handleGetPlayerLook } from "./handlers/getPlayerLook";
 import { handleGetPlayerXY } from "./handlers/getPlayerXY";
@@ -10,32 +11,23 @@ const db = new PrismaClient();
 
 const app = new Elysia()
   .use(swagger())
+  .use(cors())
   .get("/", () => "Hello, World!")
   .get(
     "/roomapi/getplayerlook",
-    ({ headers, query }) =>
-      handleGetPlayerLook(headers["x-secret"], query.secret, query.player, db),
+    ({ headers }) => handleGetPlayerLook(headers["x-secret"], db),
     {
       headers: t.Object({
         "x-secret": t.String(),
-      }),
-      query: t.Object({
-        secret: t.String(),
-        player: t.String(),
       }),
     }
   )
   .get(
     "/roomapi/getplayerxy",
-    ({ headers, query }) =>
-      handleGetPlayerXY(headers["x-secret"], query.secret, query.player, db),
+    ({ headers, query }) => handleGetPlayerXY(headers["x-secret"], db),
     {
       headers: t.Object({
         "x-secret": t.String(),
-      }),
-      query: t.Object({
-        secret: t.String(),
-        player: t.String(),
       }),
     }
   )
@@ -45,10 +37,10 @@ const app = new Elysia()
       handleUpdate(
         headers["content-type"],
         headers["x-secret"],
-        body.pos_x,
-        body.pos_y,
-        body.target_x,
-        body.target_y,
+        String(body.pos_x),
+        String(body.pos_y),
+        String(body.target_x),
+        String(body.target_y),
         db
       ),
     {

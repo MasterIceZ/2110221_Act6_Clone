@@ -1,22 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export const handleGetPlayerXY = async (
-  secret: string,
-  paramSecret: string,
-  playerId: string,
-  db: PrismaClient
-) => {
-  if (secret != paramSecret) {
-    return {
-      error: "Invalid secret",
-    };
-  }
-  if (!playerId) {
-    return {
-      error: "Invalid player",
-    };
-  }
-
+export const handleGetPlayerXY = async (secret: string, db: PrismaClient) => {
   const player = await db.user.findUnique({
     where: {
       secret,
@@ -26,12 +10,6 @@ export const handleGetPlayerXY = async (
   if (!player) {
     return {
       error: "Invalid secret",
-    };
-  }
-
-  if (parseInt(playerId) != player.id) {
-    return {
-      error: "Wrong secret for this id",
     };
   }
 
